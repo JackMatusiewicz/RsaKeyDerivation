@@ -1,7 +1,14 @@
-﻿// Learn more about F# at http://fsharp.org
-// See the 'F# Tutorial' project for more help.
+﻿namespace RsaKeyDerivation
 
-[<EntryPoint>]
-let main argv = 
-    printfn "%A" argv
-    0 // return an integer exit code
+module Main =
+    open State
+
+    let testMethod : State<int, int> =
+        State <| fun s -> (s, s+1)
+
+    let trio = replicateState 3 testMethod
+
+    [<EntryPoint>]
+    let main argv = 
+        printfn "%A" <| runState trio 1
+        0 // return an integer exit code
