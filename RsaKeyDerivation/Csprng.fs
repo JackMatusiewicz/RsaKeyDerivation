@@ -59,7 +59,3 @@ module Csprng =
         let convertToNumber = blocksToArrays >> mergeBlocks >> bigint
         let getAllBlocks : State<Csprng, Block list> = replicateState numberOfBlocks generateBlock
         map convertToNumber getAllBlocks
-
-        
-
-
