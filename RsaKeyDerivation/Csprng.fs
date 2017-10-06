@@ -46,6 +46,7 @@ module Csprng =
 
         State generate
 
+    //Will ensure it is always a positive value.
     let generate (numberOfBlocks : int) : State<Csprng, bigint> = 
         let merge (a : byte[]) (b : byte[]) : byte[] =
             let totalSize = a.Length + b.Length
@@ -54,8 +55,34 @@ module Csprng =
             System.Array.Copy(b, 0, buffer, a.Length, b.Length)
             buffer
         
+        let numberOfBitsUsed = numberOfBlocks * 16 * 8
         let blocksToArrays : Block list -> byte[] list = List.map getData
         let mergeBlocks : byte[] list -> byte[] = List.fold merge [||]
-        let convertToNumber = blocksToArrays >> mergeBlocks >> bigint
+        let ensurePositive (n : bigint) = n &&& (((bigint 1) <<< (numberOfBitsUsed - 1)) - (bigint 1))
+        let convertToNumber = blocksToArrays >> mergeBlocks >> bigint >> ensurePositive
         let getAllBlocks : State<Csprng, Block list> = replicateState numberOfBlocks generateBlock
         map convertToNumber getAllBlocks
+
+    // min inclusive, max exclusive.
+    let range (min : bigint) (max : bigint) : State<Csprng, bigint> =
+        let findLargerPowerOfTwo (value : bigint) =
+            let rec find (acc : bigint) =
+                if acc >= value then
+                    acc
+                else
+                    find (acc <<< 1)
+            find (bigint 1)
+
+        let range = max - min
+        let bound = findLargerPowerOfTwo range
+        let bytesRequired = bound.ToByteArray().Length
+
+        let rec find () = state {
+            let! number = generate bytesRequired
+            let numberInRange = number % bound
+            if numberInRange < range then
+                return numberInRange + min
+            else
+                return! find ()
+        }
+        find ()
