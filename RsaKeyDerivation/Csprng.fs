@@ -21,7 +21,6 @@ module Csprng =
         aes.Padding <- PaddingMode.None
         {Counter = bigint 0; Key = aes;}
 
-    //Todo, move this to a Result<failure, success> rather than error.
     let private createBlock (data : byte[]) : Block = Block data
     let getData (Block data) = data
 
