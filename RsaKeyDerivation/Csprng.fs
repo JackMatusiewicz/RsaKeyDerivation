@@ -27,28 +27,7 @@ module Csprng =
     let updateCounter csprng : Csprng =
         {Key = csprng.Key; Counter = csprng.Counter + (bigint 1)}
 
-    let generateBlock : State<Csprng, Block> =
-        let encrypt (key : AesManaged) (data : byte[]) : byte[] =
-            use encryptTransform = key.CreateEncryptor()
-            use ms = new MemoryStream()
-            use cs = new CryptoStream(ms, encryptTransform, CryptoStreamMode.Write)
-            cs.Write(data, 0, data.Length)
-            cs.FlushFinalBlock()
-            ms.ToArray()
-
-        let generate (csprng : Csprng) : (Block * Csprng) =
-            let bytesInGeneratedNumber = csprng.Key.BlockSize / 8
-            let counterData = csprng.Counter.ToByteArray();
-            let buffer = Array.create bytesInGeneratedNumber (byte 0)
-            System.Array.Copy(counterData, 0, buffer, 0, counterData.Length)
-            let randomNumber = encrypt (csprng.Key) buffer
-            (Block randomNumber, updateCounter csprng)
-
-        State generate
-
-    //Merges the generate block into the random number, doesn't use the state monad to combine blocks.
-    //May end up being what is needed.
-    let generateRandom (numberOfBlocks : int) : State<Csprng, bigint> =
+    let random (numberOfBlocks : int) : State<Csprng, bigint> =
         let encrypt (key : AesManaged) (data : byte[]) : byte[] =
             use encryptTransform = key.CreateEncryptor()
             use ms = new MemoryStream()
@@ -79,15 +58,6 @@ module Csprng =
 
         State <| generate
 
-    //Will ensure it is always a positive value.
-    let generate (numberOfBlocks : int) : State<Csprng, bigint> =
-        let numberOfBitsUsed = numberOfBlocks * 16 * 8
-        let blocksToArrays : Block list -> byte[] list = List.map getData
-        let ensurePositive (n : bigint) = n &&& (((bigint 1) <<< (numberOfBitsUsed - 1)) - (bigint 1))
-        let convertToNumber = blocksToArrays >> Array.concat >> bigint >> ensurePositive
-        let getAllBlocks : State<Csprng, Block list> = replicateState numberOfBlocks generateBlock
-        map convertToNumber getAllBlocks
-
     // min inclusive, max exclusive.
     let range (min : bigint) (max : bigint) : State<Csprng, bigint> =
         let findLargerPowerOfTwo (value : bigint) =
@@ -103,7 +73,7 @@ module Csprng =
         let bytesRequired = bound.ToByteArray().Length
 
         let rec find () = state {
-            let! number = generate bytesRequired
+            let! number = random bytesRequired
             let numberInRange = number % bound
             if numberInRange < range then
                 return numberInRange + min
