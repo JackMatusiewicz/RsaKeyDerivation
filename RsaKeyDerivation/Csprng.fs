@@ -33,6 +33,7 @@ module Csprng =
             use ms = new MemoryStream()
             use cs = new CryptoStream(ms, encryptTransform, CryptoStreamMode.Write)
             cs.Write(data, 0, data.Length)
+            cs.FlushFinalBlock()
             ms.ToArray()
 
         let generate (csprng : Csprng) : (Block * Csprng) =
@@ -53,6 +54,7 @@ module Csprng =
             use ms = new MemoryStream()
             use cs = new CryptoStream(ms, encryptTransform, CryptoStreamMode.Write)
             cs.Write(data, 0, data.Length)
+            cs.FlushFinalBlock()
             ms.ToArray()
 
         let rec generateCounterData (counter : bigint) (acc : byte[] list) (count : int) (size : int) : byte[] =
