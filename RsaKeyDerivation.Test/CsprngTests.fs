@@ -46,3 +46,17 @@ module CsprngTests =
         List.iter (fun (n : bigint) ->
                     Assert.That(n, Is.GreaterThanOrEqualTo(min))
                     Assert.That(n, Is.LessThan(max))) numbers
+
+    [<Test>]
+    let ``Given a csprng, when tested using both generate methods then result is the same`` () =
+        let rec test (csprng : Csprng) (count : int) =
+            match count with
+            | 0 -> ()
+            | _ ->
+                let (n1, updatedCsprng) = runState (Csprng.generate 4) csprng
+                let (n2, updatedCsprng2) = runState (Csprng.generateRandom 4) csprng
+                Assert.That(n1, Is.EqualTo(n2))
+                Assert.That(updatedCsprng.Counter, Is.EqualTo(updatedCsprng2.Counter))
+                test updatedCsprng (count - 1)
+        let csprng = Csprng.create ()
+        test csprng 1000

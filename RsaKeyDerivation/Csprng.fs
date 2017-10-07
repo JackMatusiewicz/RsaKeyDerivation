@@ -45,20 +45,45 @@ module Csprng =
 
         State generate
 
+
+    //Merges the generate block into the random number, doesn't use the state monad to combine blocks.
+    //May end up being what is needed.
+    let generateRandom (numberOfBlocks : int) : State<Csprng, bigint> =
+        let encrypt (key : AesManaged) (data : byte[]) : byte[] =
+            use encryptTransform = key.CreateEncryptor()
+            use ms = new MemoryStream()
+            use cs = new CryptoStream(ms, encryptTransform, CryptoStreamMode.Write)
+            cs.Write(data, 0, data.Length)
+            ms.ToArray()
+
+        let rec generateCounterData (counter : bigint) (acc : byte[] list) (count : int) (size : int) : byte[] =
+            match count with
+            | 0 -> (List.rev >> Array.concat) acc
+            | _ ->
+                let counterData = counter.ToByteArray();
+                let buffer = Array.create size (byte 0)
+                System.Array.Copy(counterData, 0, buffer, 0, counterData.Length)
+                generateCounterData (counter + (bigint 1)) (buffer :: acc) (count - 1) size
+
+        let ensurePositive (numberOfBitsUsed : int) (n : bigint) =
+            n &&& (((bigint 1) <<< (numberOfBitsUsed - 1)) - (bigint 1))
+
+        let generate (csprng : Csprng) : (bigint * Csprng) =
+            let numberOfBitsUsed = numberOfBlocks * 16 * 8
+            let bytesInGeneratedNumber = csprng.Key.BlockSize / 8
+            let counterData = generateCounterData (csprng.Counter) [] numberOfBlocks bytesInGeneratedNumber
+            let randomBytes = encrypt (csprng.Key) counterData
+            let randomNumber = bigint randomBytes |> ensurePositive numberOfBitsUsed
+            (randomNumber, {csprng with Counter = csprng.Counter + (bigint numberOfBlocks)})
+
+        State <| generate
+
     //Will ensure it is always a positive value.
-    let generate (numberOfBlocks : int) : State<Csprng, bigint> = 
-        let merge (a : byte[]) (b : byte[]) : byte[] =
-            let totalSize = a.Length + b.Length
-            let buffer = Array.create totalSize (byte 0)
-            System.Array.Copy(a, 0, buffer, 0, a.Length)
-            System.Array.Copy(b, 0, buffer, a.Length, b.Length)
-            buffer
-        
+    let generate (numberOfBlocks : int) : State<Csprng, bigint> =
         let numberOfBitsUsed = numberOfBlocks * 16 * 8
         let blocksToArrays : Block list -> byte[] list = List.map getData
-        let mergeBlocks : byte[] list -> byte[] = List.fold merge [||]
         let ensurePositive (n : bigint) = n &&& (((bigint 1) <<< (numberOfBitsUsed - 1)) - (bigint 1))
-        let convertToNumber = blocksToArrays >> mergeBlocks >> bigint >> ensurePositive
+        let convertToNumber = blocksToArrays >> Array.concat >> bigint >> ensurePositive
         let getAllBlocks : State<Csprng, Block list> = replicateState numberOfBlocks generateBlock
         map convertToNumber getAllBlocks
 
