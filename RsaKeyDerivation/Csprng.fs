@@ -45,7 +45,6 @@ module Csprng =
 
         State generate
 
-
     //Merges the generate block into the random number, doesn't use the state monad to combine blocks.
     //May end up being what is needed.
     let generateRandom (numberOfBlocks : int) : State<Csprng, bigint> =
