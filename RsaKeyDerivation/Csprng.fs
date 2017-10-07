@@ -7,8 +7,6 @@ type Csprng = {
     Key : AesManaged
 }
 
-type Block = private Block of byte[]
-
 module Csprng =
     open State
     open System
@@ -20,9 +18,6 @@ module Csprng =
         aes.Mode <- CipherMode.ECB
         aes.Padding <- PaddingMode.None
         {Counter = bigint 0; Key = aes;}
-
-    let private createBlock (data : byte[]) : Block = Block data
-    let getData (Block data) = data
 
     let updateCounter csprng : Csprng =
         {Key = csprng.Key; Counter = csprng.Counter + (bigint 1)}
