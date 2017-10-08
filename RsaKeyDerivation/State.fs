@@ -35,7 +35,6 @@ module State =
         member this.Return(x) = lift x
         member this.ReturnFrom(x) = x
         member this.Bind(a, f) = a >>= f
-
     let state = StateBuilder()
 
     let private append (b : 'a) (bs : 'a list) : 'a list =

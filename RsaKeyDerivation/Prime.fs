@@ -9,7 +9,7 @@ module Prime =
     let isPrime (k : int) =
         let remainderIsZero num denom = BigInteger.Remainder(num, denom) = (bigint 0)
         let smallPrimes = [2;3;5;7;11] |> List.map bigint
-        let smallPrimeTest = fun v ->
+        let smallPrimeTest = fun v -> 
             let isMultipleOfPrimes = List.map (remainderIsZero v) smallPrimes
             not <| List.fold (||) false isMultipleOfPrimes
 
@@ -49,7 +49,12 @@ module Prime =
                         | Continue -> return! attempts (k - 1)
             }
             attempts k
-        fun n -> (&&) <!> (lift <| (smallPrimeTest n)) <*> (millerRabin 5 n)
+
+        fun n ->
+            if List.contains n smallPrimes then
+                lift true
+            else
+                (&&) <!> (lift <| (smallPrimeTest n)) <*> (millerRabin 5 n)
 
     let findPrime (k : int) (start : bigint) : State<Csprng, bigint> =
         let rec findNextPrime (current : bigint) : State<Csprng, bigint> = state {

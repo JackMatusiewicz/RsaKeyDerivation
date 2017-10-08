@@ -10,6 +10,7 @@ module PrimeTests =
         let startToPrime = [
             (bigint 16, bigint 17)
             (bigint 65536, bigint 65537)
+            (bigint 7), (bigint 7)
         ]
         let csprng = Csprng.create ()
         List.iter (fun (n, truePrime) ->
