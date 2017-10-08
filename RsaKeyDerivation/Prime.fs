@@ -19,10 +19,10 @@ module Prime =
             match r with
             | 0 -> Composite
             | _ ->
-                let newX = BigInteger.ModPow(x, (bigint 2), n)
+                let newX = BigInteger.ModPow(x, bigint 2, n)
                 if newX = (bigint 1) then
                     Composite
-                else if newX = (n - (bigint 1)) then
+                else if newX = (n - bigint 1) then
                     Continue
                 else
                     witnessCheck newX n (r - 1)
@@ -54,16 +54,16 @@ module Prime =
             if List.contains n smallPrimes then
                 lift true
             else
-                (&&) <!> (lift <| (smallPrimeTest n)) <*> (millerRabinTest checks n)
+                (&&) <!> (lift <| smallPrimeTest n) <*> (millerRabinTest checks n)
 
     let findPrime (k : int) (start : bigint) : State<Csprng, bigint> =
         let rec findNextPrime (current : bigint) : State<Csprng, bigint> = state {
             let! valueIsPrime = isPrime k current
             match valueIsPrime with
             | true -> return current
-            | false -> return! findNextPrime (current + (bigint 2))
+            | false -> return! findNextPrime (current + bigint 2)
         }
         if start.IsEven then
-            findNextPrime (start - (bigint 1))
+            findNextPrime (start - bigint 1)
         else
             findNextPrime start
