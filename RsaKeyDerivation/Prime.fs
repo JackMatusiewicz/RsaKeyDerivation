@@ -32,7 +32,7 @@ module Prime =
             | 0 -> return true
             | _ ->
                 let (s,d) = calculateComposite (n - bigint 1)
-                let!  a = Csprng.range (bigint 2) (n - bigint 2)
+                let! a = Csprng.range (bigint 2) (n - bigint 2)
                 let x = BigInteger.ModPow(a, d, n)
                 if (x = bigint 1 || x = (n - bigint 1)) then
                     return! attempts (k - 1)
@@ -43,7 +43,7 @@ module Prime =
         }
         attempts k
 
-    let isPrime (checks : int) =
+    let isPrime (checks : int) : bigint -> State<Csprng, bigint> =
         let remainderIsZero num denom = BigInteger.Remainder(num, denom) = (bigint 0)
         let smallPrimes = [2;3;5;7;11] |> List.map bigint
         let smallPrimeTest = fun v -> 
