@@ -26,6 +26,10 @@ module State =
             let (State sb) = f a
             sb midS
     let (>>=) = bind
+    
+    let compose (f : 'a -> State<'s, 'b>) (g : 'b -> State<'s, 'c>) : 'a -> State<'s, 'c> =
+        fun a -> f a >>= g
+    let (>=>) = compose
 
     type StateBuilder () =
         member this.Return(x) = lift x

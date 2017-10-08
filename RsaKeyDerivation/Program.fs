@@ -10,5 +10,9 @@ module Main =
 
     [<EntryPoint>]
     let main argv = 
-        printfn "%A" <| runState trio 1
+        let rng = Csprng.create ()
+        let primeFinder = Prime.findPrime 60 (bigint 65536)
+        let (p, newState) = runState primeFinder rng
+
+        printfn "%A" <| p
         0

@@ -4,7 +4,6 @@ module CsprngTests =
     open NUnit.Framework
     open RsaKeyDerivation
     open RsaKeyDerivation.State
-    open System.Linq
 
     [<Test>]
     let ``Given a csprng when same key used twice then same block is generated`` () =
