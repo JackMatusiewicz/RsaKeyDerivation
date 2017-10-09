@@ -73,3 +73,10 @@ module Prime =
             findNextPrime (start - bigint 1)
         else
             findNextPrime start
+
+    let createPrime (checks : int) (p : bigint) : State<Csprng, Prime option> = state {
+        let! valueIsPrime = isPrime checks p
+        match valueIsPrime with
+        | true -> return Some p
+        | false -> return None
+    }
