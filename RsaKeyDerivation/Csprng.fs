@@ -44,7 +44,7 @@ module Csprng =
             n &&& (((bigint 1) <<< (numberOfBitsUsed - 1)) - (bigint 1))
 
         let generate (csprng : Csprng) : (bigint * Csprng) =
-            let numberOfBitsUsed = numberOfBlocks * 16 * 8
+            let numberOfBitsUsed = numberOfBlocks * csprng.Key.BlockSize
             let bytesInGeneratedNumber = csprng.Key.BlockSize / 8
             let counterData = generateCounterData (csprng.Counter) [] numberOfBlocks bytesInGeneratedNumber
             let randomBytes = encrypt (csprng.Key) counterData
