@@ -60,7 +60,7 @@ module Prime =
             if List.contains n smallPrimes then
                 lift true
             else
-                (&&) <!> (lift <| smallPrimeTest n) <*> (millerRabinTest checks n)
+                (lift <| smallPrimeTest n) <?> (&&) <*> (millerRabinTest checks n)
 
     let findPrime (k : int) (start : bigint) : State<Csprng, Prime> =
         let rec findNextPrime (current : bigint) : State<Csprng, Prime> = state {
