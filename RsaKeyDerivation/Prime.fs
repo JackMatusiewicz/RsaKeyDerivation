@@ -1,8 +1,12 @@
 ﻿namespace RsaKeyDerivation
 
+type Prime = private Prime of bigint
+
 module Prime =
     open System.Numerics
     open State
+
+    let toBigInt (Prime p) = p
 
     type WitnessCheckResult = Composite | Continue
 
@@ -56,11 +60,11 @@ module Prime =
             else
                 (&&) <!> (lift <| (smallPrimeTest n)) <*> (millerRabinTest checks n)
 
-    let findPrime (k : int) (start : bigint) : State<Csprng, bigint> =
-        let rec findNextPrime (current : bigint) : State<Csprng, bigint> = state {
+    let findPrime (k : int) (start : bigint) : State<Csprng, Prime> =
+        let rec findNextPrime (current : bigint) : State<Csprng, Prime> = state {
             let! valueIsPrime = isPrime k current
             match valueIsPrime with
-            | true -> return current
+            | true -> return current |> Prime
             | false -> return! findNextPrime (current + (bigint 2))
         }
         if start.IsEven then

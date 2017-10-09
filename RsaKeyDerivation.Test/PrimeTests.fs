@@ -15,4 +15,4 @@ module PrimeTests =
         let csprng = Csprng.create ()
         List.iter (fun (n, truePrime) ->
                     let p, _ = runState (Prime.findPrime 60 n) csprng
-                    Assert.That(p, Is.EqualTo(truePrime))) startToPrime
+                    Assert.That(Prime.toBigInt p, Is.EqualTo(truePrime))) startToPrime
