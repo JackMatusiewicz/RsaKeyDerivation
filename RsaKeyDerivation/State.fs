@@ -5,9 +5,6 @@ type State<'s, 'a> = State of ('s -> ('a * 's))
 module State =
     let runState (State f) = f
 
-    let private flip (f : 'a -> 'b -> 'c) (b : 'b) (a : 'a) =
-        f a b
-
     let lift x = State <| fun s -> (x,s)
 
     let map (f : 'a -> 'b) (State sf) : State<'s, 'b> =
