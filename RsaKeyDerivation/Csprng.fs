@@ -31,22 +31,22 @@ module Csprng =
             cs.FlushFinalBlock()
             ms.ToArray()
 
-        let rec generateCounterData (counter : bigint) (acc : byte[] list) (count : int) (size : int) : byte[] =
-            match count with
-            | 0 -> (List.rev >> Array.concat) acc
-            | _ ->
-                let counterData = counter.ToByteArray();
-                let buffer = Array.create size (byte 0)
-                System.Array.Copy(counterData, 0, buffer, 0, counterData.Length)
-                generateCounterData (counter + (bigint 1)) (buffer :: acc) (count - 1) size
+        let rec generateCounterData (counter : bigint) (size : int) : seq<byte[]> = seq {
+            let counterData = counter.ToByteArray();
+            let buffer = Array.create size (byte 0)
+            System.Array.Copy(counterData, 0, buffer, 0, counterData.Length)
+            yield buffer
+            yield! generateCounterData (counter + bigint 1) (size)
+        }
 
         let ensurePositive (numberOfBitsUsed : int) (n : bigint) =
             n &&& (((bigint 1) <<< (numberOfBitsUsed - 1)) - (bigint 1))
 
         let generate (csprng : Csprng) : (bigint * Csprng) =
             let numberOfBitsUsed = numberOfBlocks * csprng.Key.BlockSize
-            let bytesInGeneratedNumber = csprng.Key.BlockSize / 8
-            let counterData = generateCounterData (csprng.Counter) [] numberOfBlocks bytesInGeneratedNumber
+            let bytesInBlock = csprng.Key.BlockSize / 8
+            let counterData = (Seq.take numberOfBlocks >> Array.concat)
+                                <| generateCounterData (csprng.Counter) bytesInBlock
             let randomBytes = encrypt (csprng.Key) counterData
             let randomNumber = bigint randomBytes |> ensurePositive numberOfBitsUsed
             (randomNumber, {csprng with Counter = csprng.Counter + (bigint numberOfBlocks)})
