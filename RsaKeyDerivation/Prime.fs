@@ -2,6 +2,7 @@
 
 type Prime = private Prime of bigint
 
+[<CompilationRepresentation (CompilationRepresentationFlags.ModuleSuffix)>]
 module Prime =
     open System.Numerics
     open State
@@ -57,7 +58,7 @@ module Prime =
             not <| List.fold (||) false isMultipleOfPrimes
 
         fun n ->
-            if List.contains n smallPrimes then
+            if List.exists ((=) n) smallPrimes then
                 lift true
             else
                 (lift <| smallPrimeTest n) <?> (&&) <*> (millerRabinTest checks n)
