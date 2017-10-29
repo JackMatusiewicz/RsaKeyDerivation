@@ -77,6 +77,6 @@ module Prime =
     let createPrime (checks : int) (p : bigint) : State<Csprng, Prime option> = state {
         let! valueIsPrime = isPrime checks p
         match valueIsPrime with
-        | true -> return Some p
+        | true -> return Some <| Prime p
         | false -> return None
     }

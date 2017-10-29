@@ -43,3 +43,10 @@ module CsprngTests =
         List.iter (fun (n : bigint) ->
                     Assert.That(n, Is.GreaterThanOrEqualTo(min))
                     Assert.That(n, Is.LessThan(max))) numbers
+
+    //Property based testing would be good here.
+    [<Test>]
+    let ``Given number with msb not set, when attempt to set msb then number is correct`` () =
+        let value = bigint 8
+        let newValue = Csprng.setMsb value
+        Assert.That(newValue, Is.EqualTo(bigint 136))
