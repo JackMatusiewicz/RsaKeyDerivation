@@ -1,11 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26430.14
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "RsaKeyDerivation", "RsaKeyDerivation\RsaKeyDerivation.fsproj", "{0A0ECE17-2FE3-4F51-A3A3-08D96309CA6C}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "RsaKeyDerivation.Test", "RsaKeyDerivation.Test\RsaKeyDerivation.Test.fsproj", "{951D498F-07EF-4444-AEDE-A1206C897D59}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DE4E6744-6F63-405C-8490-93B36DC772A3}"
+	ProjectSection(SolutionItems) = preProject
+		.travis.yml = .travis.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
