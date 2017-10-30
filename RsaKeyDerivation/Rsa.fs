@@ -38,5 +38,4 @@ module Rsa =
         let genRandNum = Csprng.randomForRsa numberOfBlocks
         let findNextPrime = Prime.findPrime k
         let generateRandomPrime = genRandNum >>= findNextPrime
-        let primes = makeTuple <!> generateRandomPrime <*> generateRandomPrime
-        (uncurry derive) <!> primes
+        derive <!> generateRandomPrime <*> generateRandomPrime
