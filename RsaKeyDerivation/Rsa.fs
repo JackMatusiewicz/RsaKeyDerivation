@@ -33,9 +33,8 @@ module Rsa =
         rsaParams.InverseQ <- Math.modInverse q p |> toByteArray
         rsaParams
 
-    //TODO - remove the hardcoding, base in on crypto handbook table.
-    let createKey (numberOfBlocks : int) (k : int) : State<Csprng, RSAParameters> =
+    let createKey (numberOfBlocks : int) (numberOfPrimeChecks : int) : State<Csprng, RSAParameters> =
         let genRandNum = Csprng.randomForRsa numberOfBlocks
-        let findNextPrime = Prime.findPrime k
+        let findNextPrime = Prime.findPrime numberOfPrimeChecks
         let generateRandomPrime = genRandNum >>= findNextPrime
         derive <!> generateRandomPrime <*> generateRandomPrime
