@@ -6,6 +6,7 @@ module Rsa =
     open System.Collections.Generic
     open System.Linq
     open State
+    open System.Numerics
 
     let private toByteArray (p : bigint) : byte[] =
         p.ToByteArray()
@@ -30,7 +31,7 @@ module Rsa =
         rsaParams.P <- p |> toByteArray
         rsaParams.Q <- q |> toByteArray
         rsaParams.Modulus <- n |> toByteArray
-        rsaParams.InverseQ <- Math.modInverse q p |> toByteArray
+        rsaParams.InverseQ <- BigInteger.ModPow(q, (p - (bigint 2)), p) |> toByteArray
         rsaParams
 
     let createKey (numberOfBlocks : int) (numberOfPrimeChecks : int) : State<Csprng, RSAParameters> =
