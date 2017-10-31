@@ -8,7 +8,7 @@ module Rsa =
     open State
     open System.Numerics
 
-    let private toByteArray (p : bigint) : byte[] =
+    let private toBigEndianByteArray (p : bigint) : byte[] =
         p.ToByteArray()
             |> Array.rev
             |> Seq.skipWhile ((=) (byte 0))
@@ -21,14 +21,14 @@ module Rsa =
         let d = Math.modInverse e lambdaN
 
         let mutable rsaParams = new RSAParameters()
-        rsaParams.D <- d |> toByteArray
-        rsaParams.DP <- d % (p - (bigint 1)) |> toByteArray
-        rsaParams.DQ <- d % (q - (bigint 1)) |> toByteArray
-        rsaParams.Exponent <- e |> toByteArray
-        rsaParams.P <- p |> toByteArray
-        rsaParams.Q <- q |> toByteArray
-        rsaParams.Modulus <- n |> toByteArray
-        rsaParams.InverseQ <- BigInteger.ModPow(q, (p - (bigint 2)), p) |> toByteArray
+        rsaParams.D <- d |> toBigEndianByteArray
+        rsaParams.DP <- d % (p - (bigint 1)) |> toBigEndianByteArray
+        rsaParams.DQ <- d % (q - (bigint 1)) |> toBigEndianByteArray
+        rsaParams.Exponent <- e |> toBigEndianByteArray
+        rsaParams.P <- p |> toBigEndianByteArray
+        rsaParams.Q <- q |> toBigEndianByteArray
+        rsaParams.Modulus <- n |> toBigEndianByteArray
+        rsaParams.InverseQ <- BigInteger.ModPow(q, (p - (bigint 2)), p) |> toBigEndianByteArray
         rsaParams
 
     let createKey (numberOfBlocks : int) (numberOfPrimeChecks : int) : State<Csprng, RSAParameters> =
