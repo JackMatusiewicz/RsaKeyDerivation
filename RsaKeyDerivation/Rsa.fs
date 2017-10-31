@@ -11,13 +11,10 @@ module Rsa =
     let private toByteArray (p : bigint) : byte[] =
         p.ToByteArray()
             |> Array.rev
-            |> Seq.ofArray
             |> Seq.skipWhile ((=) (byte 0))
             |> Array.ofSeq
 
-    let private derive (primeOne : Prime) (primeTwo : Prime) : RSAParameters =
-        let (Prime p) = primeOne
-        let (Prime q) = primeTwo
+    let private derive ((Prime p) : Prime) ((Prime q) : Prime) : RSAParameters =
         let n = p * q
         let lambdaN = Math.lcm (p - (bigint 1)) (q - (bigint 1))
         let e = (bigint 65537)
