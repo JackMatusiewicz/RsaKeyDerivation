@@ -10,27 +10,21 @@ module Math =
             let gcd = BigInteger.GreatestCommonDivisor(a,b)
             (a * b) / gcd
 
-    let modInverse (a : bigint) (modValue : bigint) =
-        let mutable x = (bigint 0)
-        let mutable y = (bigint 1)
-        let mutable u = (bigint 1)
-        let mutable v = (bigint 0)
-        let mutable e = modValue
-        let mutable f = a
-        let mutable c = (bigint 0)
-        let mutable d = (bigint 0)
-        let mutable q = (bigint 0)
-        let mutable r = (bigint 0)
-        while (f <> (bigint 1)) do
-            q <- e / f
-            r <- e % f
-            c <- x - q * u
-            d <- y - q * v
-            x <- u
-            y <- v
-            u <- c
-            v <- d
-            e <- f
-            f <- r
-        (u + modValue) % modValue
+    let rec extendedGcd (a : bigint) (b : bigint) =
+        match a,b with
+        | (a,b) when b = (bigint 0) -> (bigint 1, bigint 0, a)
+        | _ ->
+            let quotient = BigInteger.Divide(a,b)
+            let rem = BigInteger.Remainder(a,b)
+            let (x,y,z) = extendedGcd b rem
+            (y, x - quotient * y, z)
+
+    let modularInverse (a : bigint) (modulus : bigint) =
+        let (i, _, k) = extendedGcd a modulus
+        if k = (bigint 1) then
+            if i < (bigint 0) then
+                Some <| i + modulus
+            else
+                Some i
+        else None
 
