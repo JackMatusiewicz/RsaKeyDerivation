@@ -84,7 +84,7 @@ module Csprng =
         match pBytes.Length with
         | 0 -> p
         | _ ->
-            pBytes.[pBytes.Length - 1] <- pBytes.[pBytes.Length - 1] &&& (byte 0xBF)||| ((byte 1) <<< 7)
+            pBytes.[pBytes.Length - 1] <- pBytes.[pBytes.Length - 1] &&& (byte 0xBF) ||| ((byte 1) <<< 7)
             let updatedBytes = Array.concat [pBytes; [|0uy|]]
             BigInteger(updatedBytes)
 

@@ -22,6 +22,7 @@ module Rsa =
             |> Seq.skipWhile ((=) (byte 0))
             |> Array.ofSeq
 
+    //The issue is that the msb of the modulus is not set to 1.
     let private createParams ((Prime p) : Prime) ((Prime q) : Prime) : RsaParameters option =
         let n = p * q
         let lambdaN = Math.lcm (p - (bigint 1)) (q - (bigint 1))
@@ -29,7 +30,7 @@ module Rsa =
         let d = Math.modularInverse e lambdaN
         match d with
         | None -> None
-        | Some dVal -> Some <| {d = dVal; p = p; q = q; e = e; n = lambdaN}
+        | Some dVal -> Some <| {d = dVal; p = p; q = q; e = e; n = n}
 
     let private fillParameters (rsa : RsaParameters) =
         let mutable rsaParams = new RSAParameters()
