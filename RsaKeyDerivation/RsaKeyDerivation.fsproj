@@ -56,9 +56,11 @@
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="Function.fs" />
     <Compile Include="State.fs" />
     <Compile Include="Csprng.fs" />
     <Compile Include="Prime.fs" />
+    <Compile Include="Math.fs" />
     <Compile Include="Rsa.fs" />
     <Compile Include="Program.fs" />
     <None Include="App.config" />

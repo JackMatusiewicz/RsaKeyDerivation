@@ -84,6 +84,11 @@ module Csprng =
         match pBytes.Length with
         | 0 -> p
         | _ ->
-            pBytes.[pBytes.Length - 1] <- pBytes.[pBytes.Length - 1] &&& (byte 0xBF)||| ((byte 1) <<< 7)
+            pBytes.[pBytes.Length - 1] <- pBytes.[pBytes.Length - 1] &&& (byte 0xBF) ||| ((byte 1) <<< 7)
             let updatedBytes = Array.concat [pBytes; [|0uy|]]
             BigInteger(updatedBytes)
+
+    ///Finds a random value that is in the right range for RSA key derivation, given a number of blocks.
+    ///Here, a block is 16 bytes.
+    let randomForRsa (numberOfBlocks : int) : State<Csprng, bigint> =
+        setMsb <!> (random numberOfBlocks)
