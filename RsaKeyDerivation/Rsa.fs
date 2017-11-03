@@ -22,7 +22,6 @@ module Rsa =
             |> Seq.skipWhile ((=) (byte 0))
             |> Array.ofSeq
 
-    //The issue is that the msb of the modulus is not set to 1.
     let private createParams ((Prime p) : Prime) ((Prime q) : Prime) : RsaParameters option =
         let n = p * q
         let lambdaN = Math.lcm (p - (bigint 1)) (q - (bigint 1))
