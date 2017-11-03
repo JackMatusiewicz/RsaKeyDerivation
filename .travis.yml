@@ -2,9 +2,7 @@ language: csharp
 solution: RsaKeyDerivation.sln
 install:
   - nuget restore RsaKeyDerivation.sln
-before_install:
-  - sudo apt-get install nunit3-console
-before_script:
-  - nuget restore RsaKeyDerivation.sln
-after_script:
-  - nunit-console
+  - nuget install NUnit.Runners -Version 3.6.0 -OutputDirectory testrunner
+script:
+  - xbuild /p:Configuration=Release RsaKeyDerivation.sln
+  - mono ./testrunner/NUnit.ConsoleRunner.3.6.0/tools/nunit-console.exe ./RsaKeyDerivation.Test/bin/Release/RsaKeyDerivation.Test.dll
