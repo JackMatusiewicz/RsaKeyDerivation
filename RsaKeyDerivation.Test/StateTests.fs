@@ -28,3 +28,11 @@ module StateTests =
         let resultList,resultState = runState listState 0
         Assert.That(resultList, Is.EqualTo([0;1;2;3;4]))
         Assert.That(resultState, Is.EqualTo(5))
+
+    [<Test>]
+    let ``Mapping a function over a state works correctly``() =
+        let incrementerToString = (fun s -> s.ToString()) <!> simpleIncrementer
+        let listStringState = State.replicateState 3 incrementerToString
+        let resultList, resultState = runState listStringState 0
+        Assert.That(resultList, Is.EqualTo(["0"; "1"; "2"]))
+        Assert.That(resultState, Is.EqualTo(3))
