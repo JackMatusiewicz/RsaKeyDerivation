@@ -36,3 +36,11 @@ module StateTests =
         let resultList, resultState = runState listStringState 0
         Assert.That(resultList, Is.EqualTo(["0"; "1"; "2"]))
         Assert.That(resultState, Is.EqualTo(3))
+
+    [<Test>]
+    let ``Applying a function over a state values works``() =
+        let createTuple a b = a,b
+        let tupleState = createTuple <!> simpleIncrementer <*> simpleIncrementer
+        let tuple,finalState = runState tupleState 0
+        Assert.That(tuple, Is.EqualTo(0,1))
+        Assert.That(finalState, Is.EqualTo(2))
