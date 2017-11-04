@@ -42,9 +42,9 @@ module Rsa =
         let primeSizeInBytes = keySizeInBits / 16
         let mutable rsaParams = new RSAParameters()
         rsaParams.DP <- rsa.d % (rsa.p - (bigint 1))
-                        |> toBigEndianByteArray //|> ensureCorrectSize primeSizeInBytes
+                        |> toBigEndianByteArray
         rsaParams.DQ <- rsa.d % (rsa.q - (bigint 1))
-                        |> toBigEndianByteArray //|> ensureCorrectSize primeSizeInBytes
+                        |> toBigEndianByteArray
         rsaParams.Exponent <- rsa.e |> toBigEndianByteArray
         rsaParams.P <- rsa.p |> toBigEndianByteArray
         rsaParams.Q <- rsa.q |> toBigEndianByteArray
