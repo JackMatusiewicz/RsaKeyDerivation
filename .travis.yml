@@ -5,4 +5,4 @@ install:
   - nuget install NUnit.Runners -Version 3.6.0 -OutputDirectory testrunner
 script:
   - xbuild /p:Configuration=Release RsaKeyDerivation.sln
-  - mono ./testrunner/NUnit.ConsoleRunner.3.6.0/tools/nunit-console.exe ./RsaKeyDerivation.Test/bin/Release/RsaKeyDerivation.Test.dll
+  - mono ./testrunner/NUnit.ConsoleRunner.3.6.0/tools/nunit3-console.exe ./RsaKeyDerivation.Test/bin/Release/RsaKeyDerivation.Test.dll
