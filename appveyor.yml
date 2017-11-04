@@ -9,5 +9,3 @@ before_build:
 build:
   project: RsaKeyDerivation.sln
   verbosity: detailed
-after_test:
-  - cmd:.\rsakeyderivation\packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -filter:"+[*]*" -target:"packages\NUnit.ConsoleRunner.3.7.0\tools\nunit3-console.exe" -targetargs:".\rsakeyderivation\RsaKeyDerivation.Test\bin\debug\RsaKeyDerivation.Tests.dll" -output:coverage.xml
