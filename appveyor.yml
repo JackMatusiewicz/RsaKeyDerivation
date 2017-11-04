@@ -14,5 +14,5 @@ build:
   project: RsaKeyDerivation.sln
   verbosity: minimal
 after_test:
-  - .\rsakeyderivation\tools\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -filter:"+[*]* -[*.Tests]* -[*.Test]*" -target:.\rsakeyderivation\tools\NUnit.ConsoleRunner.3.7.0\tools\nunit3-console.exe -targetargs:".\rsakeyderivation\RsaKeyDerivation.Test\bin\Debug\RsaKeyDerivation.Test.dll"
+  - .\rsakeyderivation\tools\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -filter:"+[*]* -[*.Tests]* -[*.Test]*" -target:".\rsakeyderivation\tools\NUnit.ConsoleRunner.3.7.0\tools\nunit3-console.exe" -targetargs:".\rsakeyderivation\RsaKeyDerivation.Test\bin\Debug\RsaKeyDerivation.Test.dll"
   - .\rsakeyderivation\tools\coveralls.net.0.7.0\tools\csmacnz.Coveralls.exe --opencover -i .\results.xml
