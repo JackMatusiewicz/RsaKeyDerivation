@@ -1,0 +1,30 @@
+﻿namespace RsaKeyDerivation.Test
+
+module StateTests =
+    open NUnit.Framework
+    open RsaKeyDerivation
+    open RsaKeyDerivation.State
+
+    let simpleIncrementer : State<int, int> =
+        State <| fun s -> (s, s+1)
+
+    [<Test>]
+    let ``When trying to replicate state zero times then the result is an empty list``() =
+        let listState = State.replicateState 0 simpleIncrementer
+        let resultList,resultState = runState listState 0
+        Assert.That(resultList, Is.Empty)
+        Assert.That(resultState, Is.Zero)
+
+    [<Test>]
+    let ``When trying to replicate state a negative number of times then the result is an empty list``() =
+        let listState = State.replicateState -5 simpleIncrementer
+        let resultList,resultState = runState listState 0
+        Assert.That(resultList, Is.Empty)
+        Assert.That(resultState, Is.Zero)
+
+    [<Test>]
+    let ``When replicating state then result is correct``() =
+        let listState = State.replicateState 5 simpleIncrementer
+        let resultList,resultState = runState listState 0
+        Assert.That(resultList, Is.EqualTo([0;1;2;3;4]))
+        Assert.That(resultState, Is.EqualTo(5))
