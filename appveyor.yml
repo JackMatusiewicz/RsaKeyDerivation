@@ -8,11 +8,11 @@ before_build:
 - nuget restore
 - nuget install NUnit.Runners -Version 3.7.0 -OutputDirectory tools
 - nuget install OpenCover -Version 4.6.519 -OutputDirectory tools
-- nuget install coveralls.net -Version 0.412.0 -OutputDirectory tools
+- nuget install coveralls.net -Version 0.7.0 -OutputDirectory tools
 
 build:
   project: RsaKeyDerivation.sln
   verbosity: minimal
 after_test:
-  - .\packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -filter:"+[*]* -[*.Tests]* -[*.Test]*" -target:.\packages\NUnit.ConsoleRunner.3.6.1\tools\nunit3-console.exe -targetargs:".\rsakeyderivation\RsaKeyDerivation.Test\bin\Debug\RsaKeyDerivation.Test.dll"
+  - .\packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -filter:"+[*]* -[*.Tests]* -[*.Test]*" -target:.\packages\NUnit.ConsoleRunner.3.7.0\tools\nunit3-console.exe -targetargs:".\rsakeyderivation\RsaKeyDerivation.Test\bin\Debug\RsaKeyDerivation.Test.dll"
   - .\packages\coveralls.net.0.7.0\tools\csmacnz.Coveralls.exe --opencover -i .\results.xml
