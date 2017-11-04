@@ -19,7 +19,7 @@ module RsaTests =
         rsa.Decrypt(data, true)
 
     [<Test>]
-    [<Repeat(10)>]
+    [<Repeat(20)>]
     let ``Round trip RSA key`` () =
         let csprng = Csprng.create ()
         let byteConverter = new UnicodeEncoding();
