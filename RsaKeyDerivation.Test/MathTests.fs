@@ -4,6 +4,12 @@ module MathTests =
     open NUnit.Framework
     open RsaKeyDerivation
     open RsaKeyDerivation.State
+    open Function
+    open System.Numerics
+    open Math
+
+    let gcd (a : bigint) (b : bigint) =
+        BigInteger.GreatestCommonDivisor(a,b)
 
     [<Test>]
     let ``Given random modulus and number, when calculating modular inverse then result is correct``() =
@@ -23,3 +29,22 @@ module MathTests =
             | Some mi ->
                 Assert.That((a * mi) % modulus, Is.EqualTo(bigint 1))
             | None -> Assert.Fail("Two primes should have an inverse")
+
+    [<Test>]
+    [<Repeat(50)>]
+    let ``Given two numbers, m and n, the gcd multiplied by lcm equals m * n``() =
+        let csprng = Csprng.create ()
+        let makeNumbers = makeTuple <!> (Csprng.random 1) <*> (Csprng. random 1)
+        let (a,b),_ = runState makeNumbers csprng
+
+        Assert.That((gcd a b) * (lcm a b), Is.EqualTo(a * b))
+
+    [<Test>]
+    [<Repeat(30)>]
+    let ``Given three numbers, a,b,c then lcm (a.b, a.c) = a . lcm(b,c)``() =
+        let makeTriple a b c = a,b,c
+        let csprng = Csprng.create ()
+        let makeNumbers = makeTriple <!> (Csprng.random 1) <*> (Csprng. random 1) <*> (Csprng. random 1)
+        let (a,b,c),_ = runState makeNumbers csprng
+
+        Assert.That(lcm (a*b) (a*c), Is.EqualTo(a * (lcm b c)))
