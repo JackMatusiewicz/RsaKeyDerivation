@@ -42,15 +42,15 @@ module Rsa =
         let primeSizeInBytes = keySizeInBits / 16
         let mutable rsaParams = new RSAParameters()
         rsaParams.DP <- rsa.d % (rsa.p - (bigint 1))
-                        |> toBigEndianByteArray
+                        |> toBigEndianByteArray |> ensureCorrectSize primeSizeInBytes
         rsaParams.DQ <- rsa.d % (rsa.q - (bigint 1))
-                        |> toBigEndianByteArray
+                        |> toBigEndianByteArray |> ensureCorrectSize primeSizeInBytes
         rsaParams.Exponent <- rsa.e |> toBigEndianByteArray
         rsaParams.P <- rsa.p |> toBigEndianByteArray
         rsaParams.Q <- rsa.q |> toBigEndianByteArray
         rsaParams.Modulus <- rsa.n |> toBigEndianByteArray
         rsaParams.InverseQ <- BigInteger.ModPow(rsa.q, (rsa.p - (bigint 2)), rsa.p)
-                                |> toBigEndianByteArray
+                                |> toBigEndianByteArray |> ensureCorrectSize primeSizeInBytes
         rsaParams.D <- rsa.d |> toBigEndianByteArray |> ensureCorrectSize (rsaParams.Modulus.Length)
         rsaParams
 
