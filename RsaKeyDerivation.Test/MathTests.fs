@@ -40,6 +40,15 @@ module MathTests =
         Assert.That((gcd a b) * (lcm a b), Is.EqualTo(a * b))
 
     [<Test>]
+    [<Repeat(50)>]
+    let ``Given two numbers, m and n, if there is a common factor then modInverse returns none``() =
+        let csprng = Csprng.create ()
+        let makeNumbers = makeTuple <!> (Csprng.random 1) <*> (Csprng. random 1)
+        let (a,b),_ = runState makeNumbers csprng
+
+        Assert.That(Math.modularInverse a (a * b), Is.EqualTo(None))
+
+    [<Test>]
     [<Repeat(30)>]
     let ``Given three numbers, a,b,c then lcm (a.b, a.c) = a . lcm(b,c)``() =
         let makeTriple a b c = a,b,c
