@@ -22,14 +22,14 @@ module RsaTests =
     [<Test>]
     [<Repeat(20)>]
     let ``Round trip RSA key`` () =
-        (*let csprng = Csprng.create ()
+        let csprng = Csprng.create ()
         let byteConverter = new UnicodeEncoding();
         let key,_ = runState (Rsa.createKey 1024 8) csprng
         let data = "hello, world" |> byteConverter.GetBytes
         let encData = encrypt data key
         let decData = decrypt encData key
         let decString = byteConverter.GetString decData
-        Assert.That(decString, Is.EqualTo("hello, world"))*)
+        Assert.That(decString, Is.EqualTo("hello, world"))
         ()
 
     [<Test>]
