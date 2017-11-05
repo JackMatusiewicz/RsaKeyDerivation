@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>0a0ece17-2fe3-4f51-a3a3-08d96309ca6c</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <RootNamespace>RsaKeyDerivation</RootNamespace>
     <AssemblyName>RsaKeyDerivation</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
@@ -62,7 +62,6 @@
     <Compile Include="Prime.fs" />
     <Compile Include="Math.fs" />
     <Compile Include="Rsa.fs" />
-    <Compile Include="Program.fs" />
     <None Include="App.config" />
     <Content Include="packages.config" />
   </ItemGroup>
