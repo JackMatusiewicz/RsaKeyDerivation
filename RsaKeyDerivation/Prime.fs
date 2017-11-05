@@ -25,7 +25,7 @@ module Prime =
             | 0 -> Composite
             | _ ->
                 let newX = BigInteger.ModPow(x, bigint 2, n)
-                if newX = (bigint 1) then
+                if newX = (bigint 1) || newX = (bigint 0) then
                     Composite
                 else if newX = (n - bigint 1) then
                     Continue
