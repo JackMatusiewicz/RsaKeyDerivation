@@ -14,7 +14,7 @@ module MathTests =
     [<Test>]
     let ``Given random modulus and number, when calculating modular inverse then result is correct``() =
         let mutable csprng = Csprng.create ()
-        let genRandNum = Csprng.randomForRsa 1
+        let genRandNum = Csprng.random 1
         let findNextPrime = Prime.findPrime 6
         let generateRandomPrime = genRandNum >>= findNextPrime
         for i in 1 .. 200 do

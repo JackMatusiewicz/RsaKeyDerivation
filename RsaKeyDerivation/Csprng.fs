@@ -24,6 +24,15 @@ module Csprng =
     let updateCounter csprng : Csprng =
         {Key = csprng.Key; Counter = csprng.Counter + (bigint 1)}
 
+    let setMsb (p : byte[]) : bigint =
+        match p.Length with
+        | 0 -> (bigint 0)
+        | _ ->
+            p.[p.Length - 1] <- (p.[p.Length - 1] &&& (byte 0xBF)) ||| ((byte 1) <<< 7)
+            let updatedBytes = Array.concat [p; [|0uy|]]
+            BigInteger(updatedBytes)
+
+    ///Generates a random positive number.
     let random (numberOfBlocks : int) : State<Csprng, bigint> =
         let encrypt (key : AesManaged) (data : byte[]) : byte[] =
             use encryptTransform = key.CreateEncryptor()
@@ -41,16 +50,13 @@ module Csprng =
             yield! generateCounterData (counter + bigint 1) (size)
         }
 
-        let ensurePositive (numberOfBitsUsed : int) (n : bigint) =
-            n &&& (((bigint 1) <<< (numberOfBitsUsed - 1)) - (bigint 1))
-
         let generate (csprng : Csprng) : (bigint * Csprng) =
             let numberOfBitsUsed = numberOfBlocks * csprng.Key.BlockSize
             let bytesInBlock = csprng.Key.BlockSize / 8
             let counterData = (Seq.take numberOfBlocks >> Array.concat)
                                 <| generateCounterData (csprng.Counter) bytesInBlock
             let randomBytes = encrypt (csprng.Key) counterData
-            let randomNumber = bigint randomBytes |> ensurePositive numberOfBitsUsed
+            let randomNumber = randomBytes |> setMsb
             (randomNumber, {csprng with Counter = csprng.Counter + (bigint numberOfBlocks)})
 
         State <| generate
@@ -78,17 +84,3 @@ module Csprng =
                 return! find ()
         }
         find ()
-    
-    let setMsb (p : bigint) : bigint =
-        let pBytes = p.ToByteArray()
-        match pBytes.Length with
-        | 0 -> p
-        | _ ->
-            pBytes.[pBytes.Length - 1] <- (pBytes.[pBytes.Length - 1] &&& (byte 0xBF)) ||| ((byte 1) <<< 7)
-            let updatedBytes = Array.concat [pBytes; [|0uy|]]
-            BigInteger(updatedBytes)
-
-    ///Finds a random value that is in the right range for RSA key derivation, given a number of blocks.
-    ///Here, a block is 16 bytes.
-    let randomForRsa (numberOfBlocks : int) : State<Csprng, bigint> =
-        setMsb <!> (random numberOfBlocks)

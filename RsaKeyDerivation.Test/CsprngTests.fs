@@ -48,5 +48,5 @@ module CsprngTests =
     [<Test>]
     let ``Given number with msb not set, when attempt to set msb then number is correct`` () =
         let value = bigint 8
-        let newValue = Csprng.setMsb value
+        let newValue = Csprng.setMsb (value.ToByteArray())
         Assert.That(newValue, Is.EqualTo(bigint 136))

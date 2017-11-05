@@ -50,7 +50,7 @@ module Rsa =
         rsaParams.Q <- rsa.q |> toBigEndianByteArray
         rsaParams.Modulus <- rsa.n |> toBigEndianByteArray
         rsaParams.InverseQ <- BigInteger.ModPow(rsa.q, (rsa.p - (bigint 2)), rsa.p)
-                                |> toBigEndianByteArray |> ensureCorrectSize primeSizeInBytes
+                                |> toBigEndianByteArray
         rsaParams.D <- rsa.d |> toBigEndianByteArray |> ensureCorrectSize (rsaParams.Modulus.Length)
         rsaParams
 
@@ -64,7 +64,7 @@ module Rsa =
 
     let createKey (keySizeInBits : int) (numberOfPrimeChecks : int) : State<Csprng, RSAParameters> =
         let numberOfBlocks = keySizeInBits / 16 / 16
-        let genRandNum = Csprng.randomForRsa numberOfBlocks
+        let genRandNum = Csprng.random numberOfBlocks
         let findNextPrime = Prime.findPrime numberOfPrimeChecks
         let generateRandomPrime = genRandNum >>= findNextPrime
         findKey (fillParameters keySizeInBits) (createParams <!> generateRandomPrime <*> generateRandomPrime)
