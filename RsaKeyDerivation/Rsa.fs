@@ -1,12 +1,13 @@
 ﻿namespace RsaKeyDerivation
 
+open Function
+open System.Security.Cryptography
+open System.Collections.Generic
+open System.Linq
+open State
+open System.Numerics
+
 module Rsa =
-    open Function
-    open System.Security.Cryptography
-    open System.Collections.Generic
-    open System.Linq
-    open State
-    open System.Numerics
 
     type RsaParameters = {
         d : bigint

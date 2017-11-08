@@ -1,12 +1,13 @@
 ﻿namespace RsaKeyDerivation.Test
 
+open NUnit.Framework
+open RsaKeyDerivation
+open RsaKeyDerivation.State
+open Function
+open System.Numerics
+open Math
+
 module MathTests =
-    open NUnit.Framework
-    open RsaKeyDerivation
-    open RsaKeyDerivation.State
-    open Function
-    open System.Numerics
-    open Math
 
     let gcd (a : bigint) (b : bigint) =
         BigInteger.GreatestCommonDivisor(a,b)

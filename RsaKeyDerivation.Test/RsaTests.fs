@@ -1,13 +1,14 @@
 ﻿namespace RsaKeyDerivation.Test
 
+open NUnit.Framework
+open RsaKeyDerivation
+open RsaKeyDerivation.State
+open System.Security.Cryptography
+open System.Text
+open System
+open System.Linq
+
 module RsaTests =
-    open NUnit.Framework
-    open RsaKeyDerivation
-    open RsaKeyDerivation.State
-    open System.Security.Cryptography
-    open System.Text
-    open System
-    open System.Linq
 
     let private encrypt (data : byte[]) (key : RSAParameters) =
         use rsa = new RSACryptoServiceProvider()

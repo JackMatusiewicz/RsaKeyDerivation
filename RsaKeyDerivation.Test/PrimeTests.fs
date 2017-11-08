@@ -1,9 +1,10 @@
 ﻿namespace RsaKeyDerivation.Test
 
+open NUnit.Framework
+open RsaKeyDerivation
+open RsaKeyDerivation.State
+
 module PrimeTests =
-    open NUnit.Framework
-    open RsaKeyDerivation
-    open RsaKeyDerivation.State
 
     [<Test>]
     let ``Given start numbers, when trying to find next prime then correct number is chosen`` () =

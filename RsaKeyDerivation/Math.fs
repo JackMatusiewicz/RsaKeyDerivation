@@ -1,7 +1,8 @@
 ﻿namespace RsaKeyDerivation
 
+open System.Numerics
+
 module Math =
-    open System.Numerics
 
     let lcm (a : BigInteger) (b : BigInteger) =
         if a = (bigint 0) && b = (bigint 0) then

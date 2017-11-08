@@ -1,9 +1,10 @@
 ﻿namespace RsaKeyDerivation.Test
 
+open NUnit.Framework
+open RsaKeyDerivation
+open RsaKeyDerivation.State
+
 module StateTests =
-    open NUnit.Framework
-    open RsaKeyDerivation
-    open RsaKeyDerivation.State
 
     let simpleIncrementer : State<int, int> =
         State <| fun s -> (s, s+1)

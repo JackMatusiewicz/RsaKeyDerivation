@@ -1,11 +1,12 @@
 ﻿namespace RsaKeyDerivation
 
+open System.Numerics
+open State
+
 type Prime = private Prime of bigint
 
 [<CompilationRepresentation (CompilationRepresentationFlags.ModuleSuffix)>]
 module Prime =
-    open System.Numerics
-    open State
 
     let toBigInt (Prime p) = p
 
@@ -19,7 +20,7 @@ module Prime =
                 (s,d)
         calc (0, n)
 
-    let millerRabinTest (k : int) (n : bigint) : State<Csprng, bool> =
+    let private millerRabinTest (k : int) (n : bigint) : State<Csprng, bool> =
         let rec witnessCheck (x : bigint) (n : bigint) (r : int) : WitnessCheckResult =
             match r with
             | 0 -> Composite

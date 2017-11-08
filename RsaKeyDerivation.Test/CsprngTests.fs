@@ -1,9 +1,10 @@
 ﻿namespace RsaKeyDerivation.Test
 
+open NUnit.Framework
+open RsaKeyDerivation
+open RsaKeyDerivation.State
+
 module CsprngTests =
-    open NUnit.Framework
-    open RsaKeyDerivation
-    open RsaKeyDerivation.State
 
     [<Test>]
     let ``Given a csprng when same key used twice then same block is generated`` () =
