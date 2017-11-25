@@ -48,3 +48,15 @@ module State =
             | _ when count <= 0 -> acc
             | _ -> loop (count - 1) sa (append <!> sa <*> acc)
         loop count sa (lift [])
+
+    let appendSeq (a : 'a) (acc : 'a seq) = seq {
+        yield a
+        yield! acc
+    }
+
+    let replicateStateSeq (count  : int) (sa : State<'s, 'a>) : State<'s, 'a seq> =
+        let rec loop sa (acc : State<'s, 'a seq>) count =
+            match count with
+            | 0 -> acc
+            | _ -> loop sa (appendSeq <!> sa <*> acc) (count - 1)
+        loop sa (lift <| Seq.empty) count

@@ -45,3 +45,11 @@ module StateTests =
         let tuple,finalState = runState tupleState 0
         Assert.That(tuple, Is.EqualTo(0,1))
         Assert.That(finalState, Is.EqualTo(2))
+
+    [<Test>]
+    let ``When replicating state in a sequence then result is correct``() =
+        let listState = State.replicateStateSeq 5 simpleIncrementer
+        let resultList,resultState = runState listState 0
+        let r = resultList |> Seq.take 5 |> List.ofSeq
+        Assert.That(r, Is.EqualTo([0;1;2;3;4]))
+        Assert.That(resultState, Is.EqualTo(5))
