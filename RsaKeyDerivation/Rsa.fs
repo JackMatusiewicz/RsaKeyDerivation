@@ -19,9 +19,9 @@ module Rsa =
 
     let private toBigEndianByteArray (p : bigint) : byte[] =
         p.ToByteArray()
-            |> Array.rev
-            |> Seq.skipWhile ((=) (byte 0))
-            |> Array.ofSeq
+        |> Array.rev
+        |> Seq.skipWhile ((=) (byte 0))
+        |> Array.ofSeq
 
     //Used to pad any values that aren't the correct length.
     let private ensureCorrectSize (size : int) (p : byte[]) : byte[] =
