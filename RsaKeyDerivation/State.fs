@@ -8,28 +8,28 @@ module State =
     let lift x = State <| fun s -> (x,s)
 
     let map (f : 'a -> 'b) (State sf) : State<'s, 'b> =
-        State
-        <| fun s ->
-            let (a, newS) = sf s
-            (f a, newS)
+        State <|
+            fun s ->
+                let (a, newS) = sf s
+                (f a, newS)
     let (<!>) = map
     let (<?>) (a : State<'s, 'a>) (f : 'a -> 'b) : State<'s, 'b> =
         map f a
 
     let apply (stateF : State<'s, 'a -> 'b>) (stateA : State<'s, 'a>) : State<'s, 'b> =
-        State
-        <| fun s ->
-            let (f, midS) = runState stateF s
-            let (a, finS) = runState stateA midS
-            (f a, finS)
+        State <|
+            fun s ->
+                let (f, midS) = runState stateF s
+                let (a, finS) = runState stateA midS
+                (f a, finS)
     let (<*>) = apply
 
     let bind (stateA : State<'s, 'a>) (f : 'a -> State<'s, 'b>) : State<'s, 'b> =
-        State
-        <| fun s ->
-            let (a, midS) = runState stateA s
-            let (State sb) = f a
-            sb midS
+        State <|
+            fun s ->
+                let (a, midS) = runState stateA s
+                let (State sb) = f a
+                sb midS
     let (>>=) = bind
     
     let compose (f : 'a -> State<'s, 'b>) (g : 'b -> State<'s, 'c>) : 'a -> State<'s, 'c> =
