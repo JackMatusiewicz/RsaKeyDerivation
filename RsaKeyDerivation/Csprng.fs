@@ -53,15 +53,20 @@ module Csprng =
         let generate (csprng : Csprng) : (bigint * Csprng) =
             let numberOfBitsUsed = numberOfBlocks * csprng.Key.BlockSize
             let bytesInBlock = csprng.Key.BlockSize / 8
-            let counterData = (Seq.take numberOfBlocks >> Array.concat)
-                                <| generateCounterData (csprng.Counter) bytesInBlock
-            let randomBytes = encrypt (csprng.Key) counterData
-            let randomNumber = randomBytes |> setMsb
+            let counterData =
+                bytesInBlock
+                |> generateCounterData (csprng.Counter)
+                |> (Seq.take numberOfBlocks >> Array.concat)
+            let randomNumber =
+                counterData
+                |> encrypt (csprng.Key)
+                |> setMsb
+
             (randomNumber, {csprng with Counter = csprng.Counter + (bigint numberOfBlocks)})
 
         State <| generate
 
-    // min inclusive, max exclusive.
+    /// min inclusive, max exclusive.
     let range (min : bigint) (max : bigint) : State<Csprng, bigint> =
         let findLargerPowerOfTwo (value : bigint) =
             let rec find (acc : bigint) =
