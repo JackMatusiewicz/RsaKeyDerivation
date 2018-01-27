@@ -5,3 +5,4 @@
 [![Coverage Status](https://coveralls.io/repos/github/JackMatusiewicz/RsaKeyDerivation/badge.svg?branch=master&service=github)](https://coveralls.io/github/JackMatusiewicz/RsaKeyDerivation?branch=master)
 
 An F# implementation of RSA key derivation. It uses an AES key as a component of the Csprng. Therefore, this can be used to create RSA keys from passwords.
+I have endeavoured to make this as immutable as possible.
