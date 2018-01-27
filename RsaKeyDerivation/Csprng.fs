@@ -64,7 +64,7 @@ module Csprng =
 
             (randomNumber, {csprng with Counter = csprng.Counter + (bigint numberOfBlocks)})
 
-        State <| generate
+        State generate
 
     /// min inclusive, max exclusive.
     let range (min : bigint) (max : bigint) : State<Csprng, bigint> =
