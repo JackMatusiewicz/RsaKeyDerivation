@@ -44,7 +44,7 @@ module State =
 
     let replicateState (count : int) (sa : State<'s, 'a>) : State<'s, 'a list> =
         let append (b : 'a) (bs : 'a list) : 'a list =
-        b :: bs
+            b :: bs
         
         let rec loop count sa (acc : State<'s, 'a list>) =
             match count with
