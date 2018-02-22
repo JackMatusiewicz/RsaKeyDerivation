@@ -42,22 +42,22 @@ module State =
         member this.Bind(a, f) = a >>= f
     let state = StateBuilder()
 
-    let private append (b : 'a) (bs : 'a list) : 'a list =
-        b :: bs
-
     let replicateState (count : int) (sa : State<'s, 'a>) : State<'s, 'a list> =
+        let append (b : 'a) (bs : 'a list) : 'a list =
+        b :: bs
+        
         let rec loop count sa (acc : State<'s, 'a list>) =
             match count with
             | _ when count <= 0 -> acc
             | _ -> loop (count - 1) sa (append <!> sa <*> acc)
         loop count sa (lift [])
 
-    let appendSeq (a : 'a) (acc : 'a seq) = seq {
-        yield a
-        yield! acc
-    }
-
     let replicateStateSeq (count  : int) (sa : State<'s, 'a>) : State<'s, 'a seq> =
+        let appendSeq (a : 'a) (acc : 'a seq) = seq {
+            yield a
+            yield! acc
+        }
+        
         let rec loop sa (acc : State<'s, 'a seq>) count =
             match count with
             | 0 -> acc
