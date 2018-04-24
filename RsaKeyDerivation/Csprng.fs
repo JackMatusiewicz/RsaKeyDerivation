@@ -56,7 +56,8 @@ module Csprng =
             let counterData =
                 bytesInBlock
                 |> generateCounterData (csprng.Counter)
-                |> (Seq.take numberOfBlocks >> Array.concat)
+                |> Seq.take numberOfBlocks
+                |> Array.concat
             let randomNumber =
                 counterData
                 |> encrypt (csprng.Key)
